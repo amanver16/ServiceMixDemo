@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<cm:property-placeholder id="persistent" persistent-id="com.stpl.onboardms.query">
+	</cm:property-placeholder>
+	
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<propertyPlaceholder location="blueprint:persistent" prefixToken="{{" suffixToken="}}"/>
+		<route>
+			<from uri="jms:topic:{{eventBus}}" />
+			<bean ref="onboardMsQueryHandler" method="handleEvent" />
+		</route>
+		
+		<route>
+			<from uri="direct-vm:{{queryAllAggregateDatails}}" />
+			<bean ref="onboardMSDomainQueryGatewayHandler" method="getAllAssociateDetails" />
+		</route>
+		
+		<route>
+			<from uri="direct-vm:{{queryAssociateDetails}}" />
+			<bean ref="onboardMSDomainQueryGatewayHandler" method="getAssociateDetails" />
+		</route>
+		
+		<route>
+			<from uri="direct-vm:{{queryLatestOnboardAssociateId}}" />
+			<bean ref="onboardMSDomainQueryGatewayHandler" method="getLatestAssociateId" />
+		</route>
+		
+		<route>
+			<from uri="jms:topic:{{clearMongoDB}}" />
+			<bean ref="queryMongoDbSevice" method="dropOnboardQueryCollection" />
+		</route>
+
+	</camelContext>
+	
+	<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${jmsUrl}"/>
+		<property name="userName" value="${jmsUser}" />
+		<property name="password" value="${jmsPassword}" />
+	</bean>
+
+
+	<bean id="onboardMsQueryHandler"
+		class="com.stpl.hr.onboard.domain.query.handler.OnboardMSDomainQueryHandler">
+		<property name="domainQueryDbSevice" ref="queryMongoDbSevice" />
+	</bean>
+	
+	<bean id="onboardMSDomainQueryGatewayHandler"
+		class="com.stpl.hr.onboard.domain.query.handler.OnboardMSDomainQueryGatewayHandler">
+		<property name="domainQueryDbSevice" ref="queryMongoDbSevice" />
+	</bean>
+
+	<!-- <bean id="queryDbSevice"
+		class="com.stpl.hr.onboard.domain.query.service.OnboardMSDomainQueryDbService">
+		<property name="domainQueryDataSource" ref="domainQueryDataSource" />
+	</bean> -->
+	
+	<bean id="onboardMsMongoDbConnection"
+		class="com.stpl.hr.onboard.domain.query.mongo.service.OnboardMsMongoDbConnection">
+		<property name="host" value="${mongoDbHost}" />
+		<property name="port" value="${mongoDbPort}" />
+		<property name="db" value="${onboardMsDB}" />
+	</bean>
+	
+	<bean id="queryMongoDbSevice"
+		class="com.stpl.hr.onboard.domain.query.mongo.service.OnboardMSDomainQueryMongoService">
+		<argument ref="onboardMsMongoDbConnection"/>
+	</bean>
+
+	<!-- <bean id="domainQueryDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+		<property name="url"
+			value="jdbc:sqlserver://10.4.48.18:1433;databaseName=SYSBIZ_HR_TEST" />
+		<property name="username" value="SYSBIZ_HR" />
+		<property name="password" value="^D$b2K5#" />
+	</bean>
+
+	<service ref="domainQueryDataSource" interface="javax.sql.DataSource">
+		<service-properties>
+			<entry key="datasource.name" value="OnboardMs" />
+			<entry key="datasource.type" value="mssql" />
+		</service-properties>
+	</service> -->
+
+</blueprint>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<route>
+			<from uri="activemq:topic:addAssociate" />
+			<bean ref="associateReadDbService" method="insertInReadDbService" />
+		</route>
+		
+		<route>
+			<from uri="activemq:topic:deleteAssociate" />
+			<bean ref="associateReadDbService" method="deleteAssociate" />
+		</route>
+		
+		<route>
+			<from uri="activemq:topic:deleteAllAssociate" />
+			<bean ref="associateReadDbService" method="deleteAllAssociate" />
+		</route>
+		
+		<route>
+			<from uri="activemq:topic:updateAssociate" />
+			<bean ref="associateReadDbService" method="updateAssociate" />
+		</route>
+		
+		<route id="readAllAssociate">
+			<from uri="direct-vm:readAllAssociate" />
+			<bean ref="associateReadDbService" method="readAllAssociate" />
+		</route>
+	</camelContext>
+
+	<bean id="associateReadDbService" class="com.stpl.servicemix.associate.readdb.service.AssociateReadDbService" />
+</blueprint>

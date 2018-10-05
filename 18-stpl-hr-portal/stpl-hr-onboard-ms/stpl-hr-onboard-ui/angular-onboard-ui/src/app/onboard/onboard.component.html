@@ -1,0 +1,136 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-4">
+			<!-- col-md-offset-3 -->
+			<h2>Personal Details</h2>
+			<form name="form" (ngSubmit)="f.form.valid && onboardAssociate()" #f="ngForm"
+				novalidate>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !firstName.valid }">
+					<label for="firstName">First Name</label> <input type="text"
+						class="form-control" name="firstName"
+						[(ngModel)]="model.firstName" #firstName="ngModel" required />
+					<div *ngIf="f.submitted && !firstName.valid" class="help-block">First
+						Name is required</div>
+				</div>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !lastName.valid }">
+					<label for="lastName">Last Name</label> <input type="text"
+						class="form-control" name="lastName" [(ngModel)]="model.lastName"
+						#lastName="ngModel" required />
+					<div *ngIf="f.submitted && !lastName.valid" class="help-block">Last
+						Name is required</div>
+				</div>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !mobileNo.valid }">
+					<label for="mobileNo">Mobile No</label> <input type="text"
+						class="form-control" name="mobileNo" [(ngModel)]="model.mobileNo"
+						#mobileNo="ngModel" required />
+					<div *ngIf="f.submitted && !mobileNo.valid" class="help-block">Mobile
+						Number is required</div>
+				</div>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !emailId.valid }">
+					<label for="emailId">E-mail Id</label> <input type="emailId"
+						class="form-control" name="emailId" [(ngModel)]="model.emailId"
+						#emailId="ngModel" required />
+					<div *ngIf="f.submitted && !emailId.valid" class="help-block">E-mail
+						is required</div>
+				</div>
+
+			</form>
+		</div>
+		<div class="col-md-4 ">
+			<h2>Educational Details</h2>
+			<form name="form" (ngSubmit)="f.form.valid && onboardAssociate()" #f="ngForm"
+				novalidate>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !highestDegree.valid }">
+					<label for="highestDegree">Highest Degree</label> <input
+						type="text" class="form-control" name="highestDegree"
+						[(ngModel)]="model.highestDegree" #highestDegree="ngModel"
+						required />
+					<div *ngIf="f.submitted && !highestDegree.valid" class="help-block">Highest
+						Degree is required</div>
+				</div>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !cgpa.valid }">
+					<label for="cgpa">CGPA</label> <input type="text"
+						class="form-control" name="cgpa" [(ngModel)]="model.cgpa"
+						#cgpa="ngModel" required />
+					<div *ngIf="f.submitted && !cgpa.valid" class="help-block">CGPA
+						is required</div>
+				</div>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !collegeName.valid }">
+					<label for="collegeName">College Name</label> <input type="text"
+						class="form-control" name="collegeName"
+						[(ngModel)]="model.collegeName" #collegeName="ngModel" required />
+					<div *ngIf="f.submitted && !collegeName.valid" class="help-block">College
+						Name is required</div>
+				</div>
+
+
+			</form>
+		</div>
+		<div class="col-md-4 ">
+			<h2>Employment Details</h2>
+			<form name="form" (ngSubmit)="f.form.valid && onboardAssociate()" #f="ngForm"
+				novalidate>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !previousEmployer.valid }">
+					<label for="previousEmployer">Previous Employer</label> <input
+						type="text" class="form-control" name="previousEmployer"
+						[(ngModel)]="model.previousEmployer" #previousEmployer="ngModel"
+						required />
+					<div *ngIf="f.submitted && !previousEmployer.valid"
+						class="help-block">Previous Employer is required</div>
+				</div>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !yearOfExperience.valid }">
+					<label for="yearOfExperience">Total Year of Experience</label> <input
+						type="text" class="form-control" name="yearOfExperience"
+						[(ngModel)]="model.yearOfExperience" #yearOfExperience="ngModel"
+						required />
+					<div *ngIf="f.submitted && !yearOfExperience.valid"
+						class="help-block">Year Of Experience is required</div>
+				</div>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !businessUnit.valid }">
+					<label for="businessUnit">Business Unit</label> <input type="text"
+						class="form-control" name="businessUnit"
+						[(ngModel)]="model.businessUnit" #businessUnit="ngModel" required />
+					<div *ngIf="f.submitted && !businessUnit.valid" class="help-block">Business
+						Unit is required</div>
+				</div>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !role.valid }">
+					<label for="role">Role</label> <input type="text"
+						class="form-control" name="role"
+						[(ngModel)]="model.role" #role="ngModel" required />
+					<div *ngIf="f.submitted && !role.valid" class="help-block">Role is required</div>
+				</div>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !designation.valid }">
+					<label for="designation">Designation</label> <input type="text"
+						class="form-control" name="designation"
+						[(ngModel)]="model.designation" #designation="ngModel" required />
+					<div *ngIf="f.submitted && !designation.valid" class="help-block">Designaton is required</div>
+				</div>
+				<div class="form-group"
+					[ngClass]="{ 'has-error': f.submitted && !joiningDate.valid }">
+					<label for="joiningDate">Joining Date</label> <input type="date"
+						class="form-control" name="joiningDate"
+						[(ngModel)]="model.joiningDate" #joiningDate="ngModel" required />
+					<div *ngIf="f.submitted && !joiningDate.valid" class="help-block">Joining date is required</div>
+				</div>
+				<div class="form-group">
+					<button  class="btn btn-primary">Onboard</button>
+					<!-- <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /> -->
+					<a [routerLink]="['']" class="btn btn-link">Home</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+

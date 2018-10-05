@@ -1,0 +1,30 @@
+[
+  {
+    "firstName": "Harlin",
+    "lastName": "Mani",
+    "mobileNo": "000",
+    "emailId": "a@gamil.com",
+    "highestDegree": "MCA",
+    "cgpa": "8",
+    "collegeName": "SRM",
+    "previousEmployer": "ddd",
+    "yearOfExperience": "4",
+    "businessUnit": "VBU",
+    "associateId": "DEV-1",
+    "aggregateId": "2136cf32-929e-4989-be8f-98d11026af19"
+  },
+  {
+    "firstName": "Santanu",
+    "lastName": "Kumar",
+    "mobileNo": "111",
+    "emailId": "aww@gamil.com",
+    "highestDegree": "MCA",
+    "cgpa": "8",
+    "collegeName": "SRM",
+    "previousEmployer": "ddd",
+    "yearOfExperience": "4",
+    "businessUnit": "VBU",
+    "associateId": "DEV-2",
+    "aggregateId": "2136cf32-929e-4989-be8f-98d11026af19"
+  }
+]

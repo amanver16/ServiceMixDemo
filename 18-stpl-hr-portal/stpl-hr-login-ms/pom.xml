@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.stpl.hr.login</groupId>
+	<artifactId>stpl-hr-login-ms</artifactId>
+	<version>1.0</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>Install-Dependency</id>
+			<modules>
+				<module>Release/ReleasePlugin</module>
+				<module>stpl-hr-login-common</module>
+			</modules>
+			<build>
+				<defaultGoal>clean install</defaultGoal>
+			</build>
+		</profile>
+
+		<profile>
+			<id>Release-Build</id>
+			<modules>
+				<module>stpl-hr-login-common</module>
+				<module>stpl-hr-login-domain-command</module>
+				<module>stpl-hr-login-domain-event-store</module>
+				<module>stpl-hr-login-domain-query</module>
+				<module>stpl-hr-login-mvc</module>
+			</modules>
+			<activation>
+				<property>
+					<name>releaseBuild</name>
+				</property>
+			</activation>
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+				<skipTests>false</skipTests>
+			</properties>
+			<build>
+				<defaultGoal>
+                    clean install com.stpl.gtn.gtn2o:ReleasePlugin:Release
+                </defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skipTests>${skipTests}</skipTests>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+
+		<profile>
+			<id>Release-All-Build</id>
+			<modules>
+				<module>stpl-hr-login-common</module>
+				<module>stpl-hr-login-domain-command</module>
+				<module>stpl-hr-login-domain-event-store</module>
+				<module>stpl-hr-login-domain-query</module>
+				<module>stpl-hr-login-mvc</module>
+				<module>stpl-hr-login-ui</module>
+			</modules>
+			<activation>
+				<property>
+					<name>releaseBuild</name>
+				</property>
+			</activation>
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+				<skipTests>false</skipTests>
+			</properties>
+			<build>
+				<defaultGoal>
+                    clean install com.stpl.gtn.gtn2o:ReleasePlugin:Release
+                </defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skipTests>${skipTests}</skipTests>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+
+	</profiles>
+</project>

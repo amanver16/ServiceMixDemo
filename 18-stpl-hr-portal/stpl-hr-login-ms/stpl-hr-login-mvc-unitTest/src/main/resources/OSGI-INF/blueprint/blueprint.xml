@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<route>
+			<from uri="activemq:topic:loginMsCommand" />
+			<bean ref="loginMsMvcUnitTest" method="getResponse" />
+			<to uri="activemq:topic:loginMsCommandResponse" />
+		</route>
+		
+		<route>
+			<from uri="activemq:queue:TestLoginMvc" />
+			<bean ref="loginMsMvcClient" method="testMvc" />
+		</route>
+	</camelContext>
+
+
+	<bean id="loginMsMvcUnitTest" class="com.stpl.hr.login.response.LoginMsMvcUnitTest" />
+	<bean id="loginMsMvcClient" class="com.stpl.hr.login.client.LoginMsMvcClient" />
+
+
+</blueprint>

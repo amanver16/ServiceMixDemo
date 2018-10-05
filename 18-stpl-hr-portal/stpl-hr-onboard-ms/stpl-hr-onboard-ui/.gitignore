@@ -1,0 +1,46 @@
+/target/
+
+# compiled output
+/angular-onboard-ui/dist
+/angular-onboard-ui/tmp
+/angular-onboard-ui/out-tsc
+
+# dependencies
+/angular-onboard-ui/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/angular-onboard-ui/e2e/*.js
+/angular-onboard-ui/e2e/*.map
+
+# System Files
+.DS_Store
+Thumbs.db
+
+/angular-login-ui/node_modules/
+/temp/
+

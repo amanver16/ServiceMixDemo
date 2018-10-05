@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    <mvc:default-servlet-handler/>
+    
+    <bean id="associateCamelProducer" class="com.stpl.associate.ui.camel.AssociateCamelProducer" init-method="configure"/>
+ 	<bean id="associateService" class="com.stpl.associate.ui.service.AssociateServiceListImpl" >
+ 		<property name="associateCamelProducer" ref="associateCamelProducer" />
+	</bean>
+    
+    <bean id="associateController" class="com.stpl.associate.ui.controller.AssociateController" >
+    	<property name="associateService" ref="associateService" />
+	</bean>
+	
+	<bean id="indexController" class="com.stpl.associate.ui.controller.IndexController" />
+
+    <bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+            <value>/WEB-INF/html/</value>
+        </property>
+        <property name="suffix">
+            <value>.html</value>
+        </property>
+	</bean>
+  	
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+
+    <mvc:annotation-driven />
+
+</beans>

@@ -1,0 +1,31 @@
+<div class="container-fluid">
+	<h2>All Assets</h2>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>Asset Id</th>
+				<th>Asset Type</th>
+				<th>Specification</th>
+				<th>Allocation Status</th>
+				<th>Asset Owner</th>
+				<th>Start Date</th>
+				<th>End Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let d of data | async">
+				<td>{{d.assetId}}</td>
+				<td>{{d.assetType}}</td>
+				<td>{{d.assetSepcification}}</td>
+				<td>{{d.assetStatus}}</td>
+				<td>{{d.assetOwner}}</td>
+				<td>{{d.startDate}}</td>
+				<td>{{d.endDate}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<div>
+	<a [routerLink]="['']" class="btn btn-link">Home</a>
+	</div>
+</div>
+

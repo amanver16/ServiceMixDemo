@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<cm:property-placeholder id="persistent" persistent-id="com.stpl.loginms.command" />
+	
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<propertyPlaceholder location="blueprint:persistent" prefixToken="{{" suffixToken="}}"/>
+		<route>
+			<from uri="jms:topic:{{commandBus}}" />
+			<bean ref="loginMsGenericCommandHandler" method="handle" />
+		</route>
+		
+		<route>
+			<from uri="jms:topic:{{eventBus}}" />
+			<bean ref="loginMsUserProcessManager" method="handleEvent" />
+		</route>		
+
+	</camelContext>
+	
+	<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${jmsUrl}" />
+		<property name="userName" value="${jmsUser}" />
+		<property name="password" value="${jmsPassword}" />
+	</bean>
+
+	<bean id="loginMsGenericCommandHandler"
+		class="com.stpl.hr.login.domain.command.handler.LoginMsGenericCommandHandler">
+		<property name="loginMsEventProducer" ref="loginMsEventProducer" />
+		<property name="loginMsAggregateLoader" ref="loginMsAggregateLoader" />
+	</bean>
+
+	<bean id="loginMsEventProducer"
+		class="com.stpl.hr.login.bus.event.producer.LoginMsEventProducer" />
+
+	<bean id="loginMsAggregateLoader"
+		class="com.stpl.hr.login.domain.aggregate.loader.LoginMsAggregateLoader" />
+
+	<bean id="loginMsUserProcessManager"
+		class="com.stpl.hr.login.domain.aggregate.processmanager.LoginMsUserProcessManager" />
+		
+
+</blueprint>

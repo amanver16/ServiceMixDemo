@@ -1,0 +1,17 @@
+<div class="col-md-8 col-md-offset-3">
+    <h1>Hi {{currentUser.firstName}} {{currentUser.lastName}}!</h1>
+    <!-- <p>You're logged in with Angular 5!!</p> -->
+    <!-- <h3>All registered users:</h3>
+    <ul>
+        <li *ngFor="let user of users">
+            {{user.username}} ({{user.firstName}} {{user.lastName}})
+            - <a (click)="deleteUser(user.id)">Delete</a>
+        </li>
+    </ul> -->
+     <a [routerLink]="['/changepassword']" class="btn btn-link">Change Password</a>
+      <!--  <a [routerLink]="['/register']" class="btn btn-link">Initiate Onboard Candidate</a> -->
+        <a href="http://localhost:8181/stpl-hr-onboard-ui/" class="btn btn-link">| &nbsp;&nbsp;&nbsp;&nbsp;Onboard</a>
+        <a href="http://localhost:8183/stpl-hr-asset-ui/" class="btn btn-link">| &nbsp;&nbsp;&nbsp;&nbsp;Asset</a>
+    <p><a [routerLink]="['/login']">Logout</a></p>
+    
+</div>

@@ -1,0 +1,45 @@
+<div class="container-fluid">
+	<h2>All Associates</h2>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>Associate Id</th>
+				<th>Aggregate Id</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>User Name</th>
+				<th>Mobile No</th>
+				<th>Email-Id</th>
+				<th>Highest Degree</th>
+				<th>CGPA</th>
+				<th>College Name</th>
+				<th>Previous Employer</th>
+				<th>Joining Date</th>
+				<th>Status</th>
+				<th>Asset Info</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let d of data | async">
+				<td>{{d.associateId}}</td>
+				<td>{{d.aggregateId}}</td>
+				<td>{{d.firstName}}</td>
+				<td>{{d.lastName}}</td>
+				<td>{{d.userName}}</td>
+				<td>{{d.mobileNo}}</td>
+				<td>{{d.emailId}}</td>
+				<td>{{d.highestDegree}}</td>
+				<td>{{d.cgpa}}</td>
+				<td>{{d.collegeName}}</td>
+				<td>{{d.previousEmployer}}</td>
+				<td>{{d.joiningDate}}</td>
+				<td>{{d.status}}</td>
+				<td>{{d.assetInfo}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<div>
+	<a [routerLink]="['']" class="btn btn-link">Home</a>
+	</div>
+</div>
+

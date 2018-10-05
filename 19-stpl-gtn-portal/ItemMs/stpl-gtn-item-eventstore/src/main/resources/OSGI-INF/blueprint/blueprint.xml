@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<cm:property-placeholder id="persistent"
+		persistent-id="com.stpl.itemms.eventstore">
+	</cm:property-placeholder>
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<propertyPlaceholder location="blueprint:persistent"
+			prefixToken="{{" suffixToken="}}" />
+		<route>
+			<from uri="jms:topic:itemMsEventBus" />
+			<bean ref="itemMsEventStoreHandler" method="handleEvent" />
+		</route>
+
+		<route>
+			<from uri="direct-vm:getItemAggregateEvents" />
+			<bean ref="eventStoreDbSevice" method="getItemAggregateEvents" />
+		</route>
+	</camelContext>
+
+	<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${jmsUrl}" />
+		<property name="userName" value="${jmsUser}" />
+		<property name="password" value="${jmsPassword}" />
+	</bean>
+	<bean id="itemMsMongoDbConnectionBean"
+		class="com.stpl.gtn.item.domain.eventstore.mongo.ItemMsMongoDBConnectionBean">
+		<property name="host" value="10.4.75.114" />
+		<property name="portNo" value="27017" />
+		<property name="databaseName" value="itemMsDb" />
+	</bean>
+	<bean id="eventStoreDbSevice"
+		class="com.stpl.gtn.item.domain.eventstore.mongo.ItemMsMongoDBConnectionService">
+		<argument ref="itemMsMongoDbConnectionBean"/>
+	</bean>
+	<bean id="itemMsEventStoreHandler"
+		class="com.stpl.gtn.item.domain.eventstore.handler.ItemMsEventStoreHandler">
+		<property name="eventStoreDbSevice" ref="eventStoreDbSevice" />
+	</bean>
+
+</blueprint>

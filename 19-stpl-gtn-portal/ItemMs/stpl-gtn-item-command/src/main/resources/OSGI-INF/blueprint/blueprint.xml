@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+
+	<cm:property-placeholder id="persistent"
+		persistent-id="com.stpl.itemms.command">
+	</cm:property-placeholder>
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<propertyPlaceholder location="blueprint:persistent"
+			prefixToken="{{" suffixToken="}}" />
+		<route>
+			<from uri="jms:topic:itemMsCommandBus" />
+			<bean ref="itemMsGenericCommandHandler" method="handleCommand" />
+		</route>
+
+		<!-- <route>
+			<from uri="jms:topic:itemMsEventBus" />
+			<bean ref="itemMsItemProcessManager" method="handleEvent" />
+		</route> -->
+
+	</camelContext>
+
+	<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${jmsUrl}" />
+		<property name="userName" value="${jmsUser}" />
+		<property name="password" value="${jmsPassword}" />
+	</bean>
+
+	<bean id="itemMsGenericCommandHandler"
+		class="com.stpl.gtn.item.domain.command.handler.ItemMsGenericCommandHandler">
+		<property name="itemMsEventProducer" ref="itemMsEventProducer" />
+		<property name="itemMsAggregateLoader" ref="itemMsAggregateLoader" />
+		<property name="itemMsService" ref="itemMsService" />
+	</bean>
+
+	<bean id="itemMsService"
+		class="com.stpl.gtn.item.domain.aggregate.item.service.ItemMsService" />
+
+	<bean id="itemMsEventProducer"
+		class="com.stpl.gtn.item.bus.event.producer.ItemMsEventProducer" />
+
+	<bean id="itemMsAggregateLoader"
+		class="com.stpl.gtn.item.domain.aggregate.item.loader.ItemMsAggregateLoader" />
+
+	<bean id="itemMsItemProcessManager"
+		class="com.stpl.gtn.item.domain.aggregate.item.processmanager.ItemMsItemProcessManager">
+		
+	</bean>
+
+
+</blueprint>

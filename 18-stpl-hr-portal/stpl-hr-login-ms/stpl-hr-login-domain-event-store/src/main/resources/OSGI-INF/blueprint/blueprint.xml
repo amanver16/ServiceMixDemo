@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<cm:property-placeholder id="persistent" persistent-id="com.stpl.loginms.eventstore" />
+	
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<propertyPlaceholder location="blueprint:persistent" prefixToken="{{" suffixToken="}}"/>
+		<route>
+			<from uri="jms:topic:{{eventBus}}" />
+			<bean ref="loginMsEventStoreHandler" method="handleEvent" />
+		</route>
+		<route>
+			<from uri="direct-vm:{{getAggregateEvents}}" />
+			<bean ref="eventStoreMongoSevice" method="getAggregateDetails" />
+		</route>
+		
+		<route>
+			<from uri="jms:topic:{{clearMongoDB}}" />
+			<bean ref="eventStoreMongoSevice" method="dropLoginEventStoreCollection" />
+		</route>
+
+	</camelContext>
+	
+	<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${jmsUrl}" />
+		<property name="userName" value="${jmsUser}" />
+		<property name="password" value="${jmsPassword}" />
+	</bean>
+
+
+	<bean id="loginMsEventStoreHandler"
+		class="com.stpl.hr.login.domainevent.store.handler.LoginMsEventStoreHandler">
+		<property name="loginMsEventStoreDbService" ref="eventStoreMongoSevice" />
+	</bean>
+
+	<bean id="loginMsMongoDbConnection"
+		class="com.stpl.hr.login.domainevent.store.mongo.service.LoginMsMongoDbConnection">
+		<property name="host" value="${mongoDbHost}" />
+		<property name="port" value="${mongoDbPort}" />
+		<property name="db" value="${loginMsDB}" />
+	</bean>
+
+	<bean id="eventStoreMongoSevice"
+		class="com.stpl.hr.login.domainevent.store.mongo.service.LoginMSDomainEventStoreMongoService">
+		<argument ref="loginMsMongoDbConnection"/>
+	</bean>
+	
+	<!-- <bean id="loginMsEventStoreDbService"
+		class=" com.stpl.hr.login.domainevent.store.service.LoginMsEventStoreCommandService"
+		>
+		<property name="commandDataSource" ref="commandDataSource" />
+	</bean>
+	
+	<bean id="commandDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+		<property name="url"
+			value="jdbc:sqlserver://10.4.48.18:1433;databaseName=SYSBIZ_HR_TEST" />
+		<property name="username" value="SYSBIZ_HR" />
+		<property name="password" value="^D$b2K5#" />
+	</bean>
+
+	<service ref="commandDataSource" interface="javax.sql.DataSource">
+		<service-properties>
+			<entry key="datasource.name" value="LoginMs" />
+			<entry key="datasource.type" value="mssql" />
+		</service-properties>
+	</service> -->
+
+</blueprint>

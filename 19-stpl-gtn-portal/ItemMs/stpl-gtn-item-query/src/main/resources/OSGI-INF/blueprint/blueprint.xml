@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<cm:property-placeholder id="persistent"
+		persistent-id="com.stpl.itemms.query">
+	</cm:property-placeholder>
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<propertyPlaceholder location="blueprint:persistent"
+			prefixToken="{{" suffixToken="}}" />
+		<route>
+			<from uri="jms:topic:itemMsEventBus" />
+			<bean ref="itemMsDomainQueryHandler" method="handleEvent" />
+		</route>
+		
+		<route>
+			<from uri="direct-vm:queryGetCompanies" />
+			<bean ref="itemMsDomainQueryGatewayHandler" method="getItem" />
+		</route>
+		
+		<route>
+			<from uri="direct-vm:getItemDetails" />
+			<bean ref="itemMsDomainQueryGatewayHandler" method="getItemDetails" />
+		</route>
+		
+		<route>
+			<from uri="direct-vm:getDomainConstant" />
+			<bean ref="itemMsDomainQueryGatewayHandler" method="getDomainConstant" />
+		</route>
+		
+		<route>
+			<from uri="direct-vm:checkDuplicateItem" />
+			<bean ref="itemMsDomainQueryGatewayHandler" method="getDuplicateItem" />
+		</route>
+		
+		<route>
+			<from uri="direct-vm:getItemTradeClass" />
+			<bean ref="itemMsDomainQueryGatewayHandler" method="getItemTradeClass" />
+		</route>
+		
+		<route>
+			<from uri="direct-vm:getItemIdentifier" />
+			<bean ref="itemMsDomainQueryGatewayHandler" method="getItemIdentifier" />
+		</route>
+	</camelContext>
+
+	<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${jmsUrl}" />
+		<property name="userName" value="${jmsUser}" />
+		<property name="password" value="${jmsPassword}" />
+	</bean>
+	<bean id="itemMsMongoConnectionBean"
+		class="com.stpl.gtn.item.domain.query.mongo.service.ItemMsMongoConnectionBean">
+		<property name="hostName" value="10.4.75.114" />
+		<property name="portNo" value="27017" />
+		<property name="dbName" value="cmMsDb" />
+	</bean>
+	<bean id="itemMsQueryMongoService"
+		class="com.stpl.gtn.item.domain.query.mongo.service.ItemMsQueryMongoService">
+		<argument ref="itemMsMongoConnectionBean"/>
+	</bean>
+	<bean id="itemMsDomainQueryHandler"
+		class="com.stpl.gtn.item.domain.query.handler.ItemMsDomainQueryHandler">
+		<property name="domainQueryDbSevice" ref="itemMsQueryMongoService" />
+	</bean>
+	
+	<bean id="itemMsDomainQueryGatewayHandler"
+		class="com.stpl.gtn.item.domain.query.handler.ItemMsDomainQueryGatewayHandler">
+		<property name="domainQueryDbSevice" ref="itemMsQueryMongoService" />
+	</bean>
+
+</blueprint>

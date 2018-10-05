@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hrappcommonqservice
+spec:
+  ports:
+   - name: webconsole
+     port: 8181
+     targetPort: 8181
+     nodePort: 30500
+   
+   - name: jms 
+     port: 61616
+     targetPort: 61616
+     nodePort: 30501
+  selector:
+    app: hrappcommonq
+  type: NodePort
+  
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hrappcommonq
+spec:
+  
+  replicas: 1
+  
+  template:
+    metadata:
+      labels:
+        app: hrappcommonq
+    spec:
+      containers:
+      - name: hrappcommonq
+        image: santanukm/commonqueue:v1.0
+        
+        ports:
+        - containerPort: 80

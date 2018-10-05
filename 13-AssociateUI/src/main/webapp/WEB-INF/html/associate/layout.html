@@ -1,0 +1,86 @@
+<div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
+<form class="form-vertical">
+	<div class="control-group">
+		<div class="control-group">
+			<label class="control-label" for="inputName">Associate Name</label>
+
+			<div class="controls">
+				<input type="text" id="inputName" ng-model="associate.associateName"
+					placeholder="Name" required="required" min="2" />
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputAddress">Address</label>
+
+			<div class="controls">
+				<input type="text" id="inputAddress" ng-model="associate.address"
+					placeholder="Address" required="required" min="5" />
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputMobile">Mobile</label>
+
+			<div class="controls">
+				<input type="text" id="inputMobile" ng-model="associate.mobile"
+					placeholder="Mobile" required="required" min="2" />
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">Email</label>
+
+			<div class="controls">
+				<input type="text" id="inputEmail" ng-model="associate.email"
+					placeholder="Email" required="required" min="2" />
+			</div>
+		</div>
+	</div>
+
+<div class="form-horizontal">
+	<div class="control-group">
+		<hr />
+		<div class="controls">
+			<button type="button" class="btn btn-primary"
+				ng-disabled="!associate.associateName" ng-hide="editMode"
+				ng-click="addNewAssociate(associate)">On Board Associate</button>
+			<button type="button" class="btn" ng-click="resetAssociateForm()">Reset</button>
+		</div>
+	</div>
+	</div>
+</form>
+<hr />
+<h3>Associates List</h3>
+<div class="alert alert-info" ng-show="associateList.length == 0">
+	No associate found</div>
+
+<table class="table table-bordered table-striped"
+	ng-show="associateList.length > 0">
+	<thead>
+		<tr>
+			<th style="text-align: center; width: 25px;">Id</th>
+			<th style="text-align: center;">Name</th>
+			<th style="text-align: center;">Address</th>
+			<th style="text-align: center;">Mobile</th>
+			<th style="text-align: center;">Email</th>
+			<th style="text-align: center;">Action</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<tr ng-repeat="associate in associateList">
+			<td style="text-align: center;">{{associate.associateId}}</td>
+			<td>{{associate.associateName}}</td>
+			<td>{{associate.address}}</td>
+			<td>{{associate.mobile}}</td>
+			<td>{{associate.email}}</td>
+			<td style="width: 100px; text-align: center;">
+				<button class="btn btn-mini btn-danger"
+					ng-click="removeAssociate(associate)">Off Board Associate</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<button class="btn btn-danger" ng-show="associateList.length > 1"
+	ng-click="removeAllAssociates()">Off Board All Associates</button>

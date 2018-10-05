@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<route>
+			<from uri="activemq:queue:testQuery" />
+			<bean ref="producerBean" method="produce" />
+			<to uri="activemq:topic:loginMsEventBus" />
+		</route>
+		
+		<route>
+			<from uri="activemq:queue:testgetUserByUserId" />
+			<bean ref="producerBean" method="getUserName" />
+			<to uri="direct-vm:getUserByUserName" />
+			<log message="getUserByUserName : ${body}"/>
+		</route>
+		
+		<route>
+			<from uri="activemq:queue:testgetUserByAggerateId" />
+			<bean ref="producerBean" method="getAggerateId" />
+			<to uri="direct-vm:getUserByAggerateId" />
+			<log message="getUserByAggerateId : ${body}"/>
+		</route>
+	</camelContext>
+
+
+	<bean id="producerBean" class="com.stpl.hr.login.querytest.LoginMSUserQueryHandlerTest"/>
+ </blueprint>

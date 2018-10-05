@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.stpl.ws.demo</groupId>
+	<artifactId>WebserviceDemo</artifactId>
+	<version>1.0</version>
+	<name>WebserviceDemo</name>
+	<packaging>war</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.spring-context</artifactId>
+			<version>4.3.5.RELEASE_1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.spring-webmvc</artifactId>
+			<version>4.3.5.RELEASE_1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.spring-web</artifactId>
+			<version>4.3.5.RELEASE_1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.spring-expression</artifactId>
+			<version>4.3.5.RELEASE_1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.spring-core</artifactId>
+			<version>4.3.5.RELEASE_1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.spring-beans</artifactId>
+			<version>4.3.5.RELEASE_1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.spring-aop</artifactId>
+			<version>4.3.5.RELEASE_1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+			<scope>provided</scope>
+		</dependency>
+		
+	</dependencies>
+	<build>
+		<finalName>WebserviceDemo</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+				<!-- <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes> -->
+					<archive>
+						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+						<configuration>
+							<instructions>
+								<Web-ContextPath>/WebserviceDemo</Web-ContextPath>
+							</instructions>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+
+					<supportedProjectTypes>
+						<supportedProjectType>jar</supportedProjectType>
+						<supportedProjectType>bundle</supportedProjectType>
+						<supportedProjectType>war</supportedProjectType>
+					</supportedProjectTypes>
+					<instructions>
+						<Import-Package>
+							*,org.springframework.web.servlet;version="[3.2,5)",
+							org.springframework.web.servlet.config;version="[3.2,5)",
+							org.springframework.web.servlet.view;version="[3.2,5)",
+							org.springframework.context.config;version="[3.2,5)",
+							org.springframework.web.context;version="[3.2,5)"
+						</Import-Package>
+						<Bundle-ClassPath>
+              				.,WEB-INF/classes         
+            			</Bundle-ClassPath> 
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

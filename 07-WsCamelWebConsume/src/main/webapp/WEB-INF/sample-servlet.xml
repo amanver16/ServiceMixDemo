@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ctx="http://www.springframework.org/schema/context"
+		xmlns:camel="http://camel.apache.org/schema/spring" xmlns:osgix="http://www.springframework.org/schema/osgi-compendium"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/osgi-compendium http://www.springframework.org/schema/osgi-compendium/spring-osgi-compendium.xsd">
+
+	<ctx:component-scan base-package="org.example.webapp.controller"></ctx:component-scan>
+	<ctx:annotation-config />
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<bean id="helloController" class="org.example.webapp.controller.HelloController"/>
+	<bean id="personProducer" class="org.example.webapp.producer.PersonProducer"/>
+	
+	<camel:camelContext xmlns="http://camel.apache.org/schema/spring">
+		<package>org.example.webapp.producer</package>
+
+		<route>
+			<from uri="seda:addPerson" />
+			<setHeader headerName="Content-Type">
+				<constant>application/xml</constant>
+			</setHeader>
+			<to uri="http://localhost:8989/rest/personservice/person/post"/>
+		</route>
+		
+		<route>
+			<from uri="direct:getPerson" />
+			<setHeader headerName="Content-Type">
+				<constant>application/xml</constant>
+			</setHeader>
+			<to uri="http://localhost:8989/rest/personservice/person/get" />
+		</route>
+		
+		<route>
+			<from uri="seda:deletePerson" />
+			<setHeader headerName="Content-Type">
+				<constant>application/xml</constant>
+			</setHeader>
+			<to uri="http://localhost:8989/rest/personservice/person/delete"/>
+		</route>
+	</camel:camelContext>
+
+</beans>

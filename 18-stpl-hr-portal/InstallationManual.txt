@@ -1,0 +1,26 @@
+
+Download and unzip new apache-servicemix-7.0.1
+
+run ServiceMix ServerPath/apache-servicemix-7.0.1/bin/servicemix.bat
+
+Copy Runtime/apache-servicemix-7.0.1/deploy to ServerPath/apache-servicemix-7.0.1/deploy
+
+feature:install transaction jndi pax-jdbc-pool-dbcp2 pax-jdbc-config
+feature:install jdbc
+feature:install jpa
+
+feature:repo-add mvn:org.hibernate/hibernate-osgi/5.1.10.Final/xml/karaf 
+feature:install hibernate-orm 
+feature:install spring-web/3.2.18.RELEASE_1
+
+* Note the bundle Id of Hibernate core and stop the servicemix
+* Add com.microsoft.sqlserver.jdbc package to ImportPackage of 
+	ServerPath\apache-servicemix-7.0.1\data\cache\bundle(bundleId)\version0.0\bundle.jar\METE-INF\MANIFEST.MF
+	
+Copy Runtime/apache-servicemix-7.0.1/etc to ServerPath/apache-servicemix-7.0.1/etc
+
+	
+Optional Features:
+
+* feature:install webconsole
+* feature:install activemq-web-console

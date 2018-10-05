@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+
+	<cm:property-placeholder id="persistent" persistent-id="com.stpl.onboardms.command">
+	</cm:property-placeholder>
+	
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+	<propertyPlaceholder location="blueprint:persistent" prefixToken="{{" suffixToken="}}"/>
+		<route>
+			<from uri="jms:topic:{{commandBus}}" />
+			<bean ref="onboardMsGenericCommandHandler" method="handle" />
+		</route>
+
+	</camelContext>
+	
+	<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${jmsUrl}"/>
+		<property name="userName" value="${jmsUser}" />
+		<property name="password" value="${jmsPassword}" />
+	</bean>
+
+	<bean id="onboardMsGenericCommandHandler"
+		class="com.stpl.hr.onboard.domain.command.handler.OnboardMsGenericCommandHandler">
+		<property name="onboardMsEventProducer" ref="onboardMsEventProducer" />
+		<property name="onboardMsAggregateLoader" ref="onboardMsAggregateLoader" />
+		<property name="onboardMsAssociateService" ref="onboardMsAssociateService" />
+	</bean>
+
+	<bean id="onboardMsAssociateService"
+		class="com.stpl.hr.onboard.domain.aggregate.associate.service.OnboardMsAssociateService" />
+
+	<bean id="onboardMsEventProducer"
+		class="com.stpl.hr.onboard.bus.event.producer.OnboardMsEventProducer" />
+
+	<bean id="onboardMsAggregateLoader"
+		class="com.stpl.hr.onboard.domain.aggregate.associate.loader.OnboardMsAggregateLoader" />
+
+
+</blueprint>

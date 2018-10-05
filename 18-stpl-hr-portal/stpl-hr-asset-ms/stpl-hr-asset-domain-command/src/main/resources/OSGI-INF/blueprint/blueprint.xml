@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+
+	<cm:property-placeholder id="persistent"
+		persistent-id="com.stpl.assetms.command">
+	</cm:property-placeholder>
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<propertyPlaceholder location="blueprint:persistent"
+			prefixToken="{{" suffixToken="}}" />
+		<route>
+			<from uri="jms:topic:{{commandBus}}" />
+			<bean ref="assetMsGenericCommandHandler" method="handle" />
+		</route>
+
+		<route>
+			<from uri="jms:topic:{{eventBus}}" />
+			<bean ref="assetMsAssetProcessManager" method="handleEvent" />
+		</route>
+
+	</camelContext>
+
+	<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${jmsUrl}" />
+		<property name="userName" value="${jmsUser}" />
+		<property name="password" value="${jmsPassword}" />
+	</bean>
+
+	<bean id="assetMsGenericCommandHandler"
+		class="com.stpl.hr.asset.domain.command.handler.AssetMsGenericCommandHandler">
+		<property name="assetMsEventProducer" ref="assetMsEventProducer" />
+		<property name="assetMsAggregateLoader" ref="assetMsAggregateLoader" />
+		<property name="assetMsService" ref="assetMsService" />
+	</bean>
+
+	<bean id="assetMsService"
+		class="com.stpl.hr.asset.domain.aggregate.asset.service.AssetMsService" />
+
+	<bean id="assetMsEventProducer"
+		class="com.stpl.hr.asset.bus.event.producer.AssetMsEventProducer" />
+
+	<bean id="assetMsAggregateLoader"
+		class="com.stpl.hr.asset.domain.aggregate.asset.loader.AssetMsAggregateLoader" />
+
+	<bean id="assetMsAssetProcessManager"
+		class="com.stpl.hr.asset.domain.aggregate.asset.processmanager.AssetMsAssetProcessManager">
+		<property name="assetMsService" ref="assetMsService" />
+	</bean>
+
+
+</blueprint>

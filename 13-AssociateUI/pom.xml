@@ -1,0 +1,76 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.stpl.servicemix.associate</groupId>
+	<artifactId>13-AssociateUI</artifactId>
+	<version>1.0</version>
+	<packaging>war</packaging>
+
+	<properties>
+		<org.springframework-version>4.2.9.RELEASE</org.springframework-version>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+	</properties>
+
+
+	<dependencies>
+		<dependency>
+		<groupId>com.stpl.servicemix.associate</groupId>
+		<artifactId>14-AssociateController</artifactId>
+		<version>1.0</version>
+		<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+						<configuration>
+							<instructions>
+								<Web-ContextPath>/13-AssociateUI</Web-ContextPath>
+							</instructions>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+
+					<supportedProjectTypes>
+						<supportedProjectType>jar</supportedProjectType>
+						<supportedProjectType>bundle</supportedProjectType>
+						<supportedProjectType>war</supportedProjectType>
+					</supportedProjectTypes>
+					<instructions>
+						<Import-Package>  *,org.springframework.web.servlet;version="[3.1,5)",
+							org.springframework.context.config;version="[3.1,5)",
+							org.springframework.web.servlet.config;version="[3.1,5)",
+							org.springframework.web.servlet.view;version="[3.1,5)",
+							com.stpl.associate.ui.bean,
+							com.stpl.associate.ui.controller,
+							com.stpl.associate.ui.service,
+							com.stpl.associate.ui.camel</Import-Package>						
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+
+	<cm:property-placeholder id="persistent" persistent-id="com.stpl.itemms.mvc" 
+		placeholder-prefix="*{" placeholder-suffix="}">
+	</cm:property-placeholder>
+
+	<cm:property-placeholder persistent-id="com.stpl.itemms.cxf.receive"
+		update-strategy="reload">
+	</cm:property-placeholder>
+
+	<cxf:rsServer id="rsServer" address="/GtnWsItemMaster"
+		serviceClass="com.stpl.gtn.item.mvc.controller.ItemMsItemController"
+		loggingFeatureEnabled="true" loggingSizeLimit="200">
+	</cxf:rsServer>
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<propertyPlaceholder location="blueprint:persistent" prefixToken="{{" suffixToken="}}"/>
+		
+		<route>
+			<from uri="jms:topic:itemMsEventBus" />
+			<bean ref="itemMsEventTracker" method="putEvent" />
+		</route>
+
+		<route id="itemMsUserController">
+			<from uri="cxfrs:bean:rsServer?bindingStyle=SimpleConsumer" />
+			<log message="Operation Name : ${header.operationName}" />
+			<recipientList>
+				<simple>vm:${header.operationName}</simple>
+			</recipientList>
+		</route>
+		<route>
+			<from uri="vm:addItem" />
+			<bean ref="itemMsitemController" method="addItem" />
+		</route>
+
+		<route>
+			<from uri="vm:getItems" />
+			<bean ref="itemMsitemController" method="getItems" />
+		</route>
+		<route>
+			<from uri="vm:deleteItem" />
+			<bean ref="itemMsitemController" method="deleteItem" />
+		</route>
+		<route>
+			<from uri="vm:getItemDetails" />
+			<bean ref="itemMsitemController" method="getItemDetails" />
+		</route>
+
+	</camelContext>
+
+	<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="*{jmsUrl}" />
+		<property name="userName" value="*{jmsUser}" />
+		<property name="password" value="*{jmsPassword}" />
+	</bean>
+	
+	<bean id="itemMsCommandProducer"
+		class="com.stpl.gtn.item.mvc.bus.producer.ItemMsCommandProducer" />
+		
+	<bean id="itemMsEventTracker" class="com.stpl.gtn.item.mvc.bus.consumer.ItemMsEventTracker"/>
+	
+	<bean id="itemMsQueryModelGateway"
+		class="com.stpl.gtn.item.mvc.bus.gateway.ItemMsQueryModelGateway" />
+
+	<bean id="itemMsitemController" class="com.stpl.gtn.item.mvc.controller.ItemMsItemController">
+		<property name="itemMsCommandProducer" ref="itemMsCommandProducer" />
+		<property name="itemMsEventTracker" ref="itemMsEventTracker" />
+		<property name="itemMsQueryModelGateway" ref="itemMsQueryModelGateway" />
+	</bean>
+
+</blueprint>

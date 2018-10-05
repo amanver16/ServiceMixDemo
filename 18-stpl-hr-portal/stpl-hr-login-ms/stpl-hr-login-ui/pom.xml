@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+
+    <groupId>stpl.hr.login.ui</groupId>
+    <artifactId>stpl-hr-login-ui</artifactId>
+    <packaging>war</packaging>
+	<parent>
+		<groupId>com.stpl.hr.login</groupId>
+		<artifactId>stpl-hr-login-ms</artifactId>
+		<version>1.0</version>
+	</parent>
+    <name>LoginMS UI</name>
+
+    <properties>
+        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.springframework-version>3.2.18.RELEASE_1</org.springframework-version>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.spring-webmvc</artifactId>
+			<version>${org.springframework-version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.spring-web</artifactId>
+			<version>${org.springframework-version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.spring-core</artifactId>
+			<version>${org.springframework-version}</version>
+			<scope>provided</scope>
+		</dependency>
+    </dependencies>
+
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>    
+                 <version>3.0.0</version> 
+                 <configuration>
+					<archive>
+						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+				</configuration>          
+            </plugin>
+            <!-- Plugin to execute command "npm install" and "npm run build" inside 
+            /angular directory -->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <workingDirectory>angular-login-ui</workingDirectory>
+                    <installDirectory>temp</installDirectory>
+                </configuration>
+                <executions>
+                    <!-- It will install nodejs and npm -->
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v9.2.0</nodeVersion>
+                            <npmVersion>5.0.0</npmVersion>
+                        </configuration>
+                    </execution>
+                    <!-- It will execute command "npm install" inside "/angular2-registration-login-example-cli-master" directory -->
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <!-- It will execute command "npm build" inside "/angular2-registration-login-example-cli-master" directory 
+                    to clean and create "/dist" directory -->
+                    <execution>
+                        <id>npm build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4.2</version>
+                <executions>
+                    <execution>
+                        <id>default-copy-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <overwrite>true</overwrite>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/angular-login-ui/dist</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+						<configuration>
+							<instructions>
+								<Web-ContextPath>/stpl-hr-login-ui</Web-ContextPath>
+							</instructions>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+
+					<supportedProjectTypes>
+						<supportedProjectType>jar</supportedProjectType>
+						<supportedProjectType>bundle</supportedProjectType>
+						<supportedProjectType>war</supportedProjectType>
+					</supportedProjectTypes>
+					<instructions>
+						<Import-Package>  *,org.springframework.web.servlet;version="[3.1,5)",
+							org.springframework.web.servlet.config;version="[3.1,5)",
+							org.springframework.web.servlet.view;version="[3.1,5)"
+							</Import-Package>						
+					</instructions>
+				</configuration>
+			</plugin>
+        </plugins>
+    </build>
+
+</project>

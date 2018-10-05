@@ -1,0 +1,20 @@
+[
+  {
+    "assetId": "1",
+    "assetType": "System",
+    "specification": "8gb RAM,350 HD",
+    "allocationStatus": "allocated",
+    "allocatedTo": "Rajadurai",
+    "startDate": "01/09/2017",
+    "endDate": "01/09/2018"
+  },
+  {
+    "assetId": "2",
+    "assetType": "Table",
+    "specification": "NA",
+    "allocationStatus": "allocated",
+    "allocatedTo": "Prashant",
+    "startDate": "01/09/2017",
+    "endDate": "01/09/2018"
+  }
+]
